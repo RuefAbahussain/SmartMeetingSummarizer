@@ -8,7 +8,6 @@ Convert meeting recordings into automatic summaries with AI-powered transcriptio
 
 - Automatic Summarization - AI generates 5 key bullet points
 - Accurate Transcription - Whisper speech-to-text technology
-- Privacy First - Audio processing done locally
 - Easy Copy - Copy summary or transcript with one click
 - Responsive Design - Works on desktop and mobile
 
