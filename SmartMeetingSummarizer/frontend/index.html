@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Meeting Summarizer</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Smart Meeting Summarizer</h1>
+            <p class="subtitle">Convert speech to text and generate summaries</p>
+        </header>
+
+        <main>
+            <div class="upload-section">
+                <div class="upload-box">
+                    <input type="file" id="audioFile" accept="audio/*" />
+                    <label for="audioFile" class="upload-label">
+                        <span class="upload-icon">📁</span>
+                        <span class="upload-text">Click to upload audio file</span>
+                        <span class="upload-hint">(MP3, WAV, M4A, etc.)</span>
+                    </label>
+                </div>
+                <button id="submitBtn" class="btn-primary" disabled>Process Audio</button>
+            </div>
+
+            <div id="loadingSpinner" class="loading-spinner hidden">
+                <div class="spinner"></div>
+                <p>Processing your audio...</p>
+            </div>
+
+            <div id="resultsSection" class="results-section hidden">
+                <div class="result-card">
+                    <h2>🔑 Summary</h2>
+                    <div id="summaryBox" class="text-box">
+                        <p id="summaryText"></p>
+                    </div>
+                    <button class="btn-copy" onclick="copyToClipboard('summaryText')">Copy Summary</button>
+                </div>
+
+                <details class="result-card transcript-details">
+                    <summary class="transcript-summary">🔻 Transcript</summary>
+                    <div id="transcriptBox" class="text-box">
+                        <p id="transcriptText"></p>
+                    </div>
+                    <button class="btn-copy" onclick="copyToClipboard('transcriptText')">Copy Transcript</button>
+                </details>
+            </div>
+
+            <div id="errorSection" class="error-section hidden">
+                <div class="error-box">
+                    <p id="errorMessage"></p>
+                </div>
+                <button class="btn-secondary" onclick="resetForm()">Try Again</button>
+            </div>
+        </main>
+
+        <footer>
+        </footer>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
