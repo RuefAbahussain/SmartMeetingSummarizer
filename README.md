@@ -35,7 +35,7 @@ Clone the repo and run locally:
 
 ```bash
 # Clone and enter directory
-git clone https://github.com/yourusername/SmartMeetingSummarizer.git
+git clone https://github.com/RuefAbahussain/SmartMeetingSummarizer.git
 cd SmartMeetingSummarizer
 
 # Install dependencies
