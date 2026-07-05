@@ -4,49 +4,162 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Meeting Summarizer</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/style.css?v=2">
 </head>
 <body>
-    <div class="container">
-        <header>
+    <div class="page">
+        <header class="hero">
+            <div class="hero-icon">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <path d="M14 2v6h6"/>
+                    <path d="M10 12v5"/>
+                    <path d="M13 11v7"/>
+                    <path d="M16 13v3"/>
+                </svg>
+            </div>
             <h1>Smart Meeting Summarizer</h1>
-            <p class="subtitle">Convert speech to text and generate summaries</p>
+            <p class="subtitle">Turn your meeting recording into a clear summary in seconds</p>
         </header>
 
         <main>
-            <div class="upload-section">
-                <div class="upload-box">
-                    <input type="file" id="audioFile" accept="audio/*" />
-                    <label for="audioFile" class="upload-label">
-                        <span class="upload-icon">📁</span>
-                        <span class="upload-text">Click to upload audio file</span>
-                        <span class="upload-hint">(MP3, WAV, M4A, etc.)</span>
-                    </label>
-                </div>
-                <button id="submitBtn" class="btn-primary" disabled>Process Audio</button>
-            </div>
+            <div class="panel">
+                <div class="credentials">
+                    <div class="field">
+                        <label for="provider">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M6 22V4a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v18"/>
+                                <path d="M14 9h4a1 1 0 0 1 1 1v12"/>
+                                <path d="M6 22h14"/>
+                                <path d="M9 6h.01M9 10h.01M9 14h.01M13 6h.01M13 10h.01M13 14h.01M17 13h.01M17 17h.01"/>
+                            </svg>
+                            Provider
+                        </label>
+                        <select id="provider">
+                            <option value="openai">OpenAI</option>
+                            <option value="gemini">Gemini</option>
+                            <option value="anthropic">Anthropic</option>
+                            <option value="mistral">Mistral</option>
+                            <option value="groq">Groq</option>
+                            <option value="deepseek">DeepSeek</option>
+                            <option value="xai">xAI (Grok)</option>
+                            <option value="custom">Custom (OpenAI-compatible)</option>
+                        </select>
+                    </div>
 
-            <div id="loadingSpinner" class="loading-spinner hidden">
-                <div class="spinner"></div>
-                <p>Processing your audio...</p>
+                    <div class="field">
+                        <label for="apiKey">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <circle cx="7.5" cy="15.5" r="4.5"/>
+                                <path d="M10.8 12.2 19 4"/>
+                                <path d="M15 9l3 3"/>
+                                <path d="M18 6l2 2"/>
+                            </svg>
+                            API Key
+                        </label>
+                        <input type="password" id="apiKey" placeholder="Paste your API key" autocomplete="off" />
+                        <a id="getKeyLink" class="get-key-link" href="#" target="_blank" rel="noopener">Get API key ↗</a>
+                    </div>
+
+                    <div class="field hidden" id="baseUrlField">
+                        <label for="baseUrl">Base URL</label>
+                        <input type="text" id="baseUrl" placeholder="https://your-endpoint/v1" autocomplete="off" />
+                    </div>
+
+                    <div class="field">
+                        <label for="modelSelect">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <rect x="6" y="6" width="12" height="12" rx="1"/>
+                                <rect x="9" y="9" width="6" height="6" rx="1"/>
+                                <path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/>
+                            </svg>
+                            Model
+                        </label>
+                        <select id="modelSelect"></select>
+                        <input type="text" id="modelText" class="hidden" placeholder="Enter model name" autocomplete="off" />
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="upload-section">
+                    <label class="upload-label-text">Meeting Audio File</label>
+
+                    <div id="uploadDropzone" class="upload-box" tabindex="0" role="button" aria-label="Upload audio file">
+                        <input type="file" id="audioFile" accept="audio/*" class="hidden" tabindex="-1" />
+                        <svg class="icon upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M20 16.2A4.5 4.5 0 0 0 18 8h-1.3A6 6 0 1 0 5 12.9"/>
+                            <path d="M12 12v9"/>
+                            <path d="M9 15l3-3 3 3"/>
+                        </svg>
+                        <p class="upload-text">Drag your file here or click to browse</p>
+                        <p class="upload-hint">MP3, WAV, M4A, and more</p>
+                    </div>
+
+                    <div id="filePreview" class="file-preview hidden">
+                        <div class="file-preview-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <path d="M14 2v6h6"/>
+                                <path d="M10 12v5"/>
+                                <path d="M13 11v7"/>
+                                <path d="M16 13v3"/>
+                            </svg>
+                        </div>
+                        <div class="file-preview-info">
+                            <p id="fileName" class="file-name"></p>
+                            <p id="fileSize" class="file-size"></p>
+                        </div>
+                        <button type="button" id="removeFileBtn" class="file-remove-btn" aria-label="Remove file">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <button id="submitBtn" class="btn-primary" disabled>
+                    <svg id="submitSpinner" class="icon spin hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                    </svg>
+                    <span id="submitLabel">Process Audio</span>
+                </button>
             </div>
 
             <div id="resultsSection" class="results-section hidden">
                 <div class="result-card">
-                    <h2>🔑 Summary</h2>
-                    <div id="summaryBox" class="text-box">
-                        <p id="summaryText"></p>
+                    <h2>
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <path d="M14 2v6h6"/>
+                            <line x1="8" y1="13" x2="16" y2="13"/>
+                            <line x1="8" y1="17" x2="16" y2="17"/>
+                            <line x1="8" y1="9" x2="10" y2="9"/>
+                        </svg>
+                        Summary
+                    </h2>
+                    <div class="text-box">
+                        <div id="summaryText"></div>
                     </div>
                     <button class="btn-copy" onclick="copyToClipboard('summaryText')">Copy Summary</button>
                 </div>
 
-                <details class="result-card transcript-details">
-                    <summary class="transcript-summary">🔻 Transcript</summary>
-                    <div id="transcriptBox" class="text-box">
+                <div class="result-card">
+                    <h2>
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M8 21h9a2 2 0 0 0 2-2v-2H11v2a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v3h4"/>
+                            <path d="M19 17V5a2 2 0 0 0-2-2H7"/>
+                            <line x1="9" y1="9" x2="16" y2="9"/>
+                            <line x1="9" y1="13" x2="16" y2="13"/>
+                        </svg>
+                        Transcript
+                    </h2>
+                    <div class="text-box">
                         <p id="transcriptText"></p>
                     </div>
                     <button class="btn-copy" onclick="copyToClipboard('transcriptText')">Copy Transcript</button>
-                </details>
+                </div>
             </div>
 
             <div id="errorSection" class="error-section hidden">
@@ -56,11 +169,9 @@
                 <button class="btn-secondary" onclick="resetForm()">Try Again</button>
             </div>
         </main>
-
-        <footer>
-        </footer>
     </div>
 
     <script src="/static/js/app.js"></script>
 </body>
 </html>
+
