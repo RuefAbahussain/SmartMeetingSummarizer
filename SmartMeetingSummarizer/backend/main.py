@@ -32,7 +32,7 @@ MAX_CONCURRENT_TRANSCRIPTIONS = 2
 _transcribe_semaphore = asyncio.Semaphore(MAX_CONCURRENT_TRANSCRIPTIONS)
 
 
-whisper_model = whisper.load_model("base")
+whisper_model = whisper.load_model("tiny")
 
 # No owner API key is stored or used. Every request must carry the visitor's
 # own credentials (api_key / model / base_url), forwarded per-call to LiteLLM.
