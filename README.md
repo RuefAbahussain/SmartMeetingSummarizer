@@ -2,6 +2,10 @@
 
 Convert meeting recordings into automatic summaries with AI-powered transcription.
 
+## Screenshots
+
+![Main Interface](screenshot.png)
+
 =====================================
 
 ## Features
