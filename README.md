@@ -4,7 +4,7 @@ Convert meeting recordings into automatic summaries with AI-powered transcriptio
 
 ## Screenshots
 
-![Main Interface](screenshott.png)
+![Main Interface](screenshott.jpeg)
 
 =====================================
 
